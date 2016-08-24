@@ -14,8 +14,6 @@ while getopts ":wpbvlfh" ARG; do
 			BASE=false;;
 		l)
 			LIST=true;;
-		f)
-			FORCE=true;;
 		h)
 			echo "Usage: freshinstall.sh [-wpblvh]\n
 \t-w: Also installs components for hosting a webserver\n
@@ -32,34 +30,93 @@ while getopts ":wpbvlfh" ARG; do
 	esac
 done
 
+#.deb install function
+deb_install() {
+	echo "installin'";
+}
+
+#source tarball install function
+src_install() {
+	wget $URL --outfile=pkgsrc.archive;
+	mkdir -p pkgsrc;
+	tar xvf pkgsrc -C pkgsrc --strip-components 1;
+	pushd pkgsrc ./configure && make && make install;
+	popd;
+	rm -rf pkgsrc;
+}
+
+
+#list packages and exit
 if [ $LIST ]; then
 	echo "List of packages goes here";
 	exit 0;
 fi
 
+
+#check for root permissions, using sudo/gksudo if available
+if [ $(id -u) -ne 0 ]; then
+	if [ $DISPLAY ] && [ $(which gksudo) ]; then
+		gksudo "$0 $@";
+		exit 0;
+	fi
+	if [ $(which sudo) ]; then
+		sudo "$0 $@";
+		exit 0;
+	fi
+	echo "This script requires root permissions."
+	exit 2;
+fi
+
+
+#find the package manager and set the update/install commands appropriately
 if [ $VERBOSE ]; then
 	echo "Searching for package manager...";
 fi
 if [ $(which apt) ]; then
 	PKG="apt";
-	INSTALL="apt install ";
+	INSTALL="apt install -y ";
 	UPDATE="apt update";
 elif [ $(which apt-get) ]; then
 	PKG="apt-get";
-	INSTALL="apt-get install ";
+	INSTALL="apt-get install -y ";
 	UPDATE="apt-get update"
 elif [ $(which pacman) ]; then
 	PKG="pacman";
 	INSTALL="pacman -I ";
 	UPDATE="pacman -Syy"
 fi
-
-
 if [ $VERBOSE ] && [ $PKG ]; then
 	echo "Package manager found. Using $PKG provided by $(which $PKG).";
 fi
 
-if ! [ $PKG ] && ! [ $FORCE ]; then
-	echo "Package manager could not be found and '-f' flag not given. Exiting." >&2;
-	exit 2;
+
+if [ $VERBOSE ]; then
+	echo "Installing from repositories (using 'packages.pack')";
 fi
+
+#reads ppas to be added if on a debian-based system
+if [ "$PKG" = "apt" ] || [ "$PKG" = "apt-get" ]; then
+	if [ $VERBOSE ]; then
+		echo "\tReading ppa's from packages.ppa";
+	fi
+	PPAS=$(awk -F" " '{print $1}' packages.ppa);
+	PKGS=$(awk -F" " '{print $2}' packages.ppa);
+	for PPA in $PPAS; do
+		add-apt-repository $PPA -y;
+	done
+	$UPDATE;
+fi
+
+if ! [ $PKGS ]; then
+	PKGS="";
+fi
+
+for line in $(cat packages.pack); do
+	PKGS="$PKGS $line";
+done
+
+if [ $VERBOSE ]; then
+	echo "Installing $PKGS...";
+fi
+
+$INSTALL $PKGS;
