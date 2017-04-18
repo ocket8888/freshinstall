@@ -1,0 +1,64 @@
+Physics
+-------
+octave 			+
+  -octave 		+
+  -octave-info 	+
+R 				+
+Scribus 		
+step 			
+
+Comp Sci
+--------
+ruby/rubygems
+ghc
+gdb
+qtspim
+nasm_x86
+apache
+php
+mysql
+node
+eclipse
+gfortran
+perl
+android-studio
+	-ppa: ppa:paolorotolo/android-studio
+brackets
+
+Both
+----
+gcc 			+
+sublime-text	+
+grive 			+
+	-ppa:nilarimogard/webupd8
+vim				+	
+tmux			+
+texlive-full	+
+git 			+
+inkscape 		+
+gimp 			+
+zsh 			+
+oh-my-zsh		
+	-agnoster	
+	-setup: http://ohmyz.sh/
+glipper 		+
+https://downloads.slack-edge.com/linux_releases/slack-desktop-2.1.0-amd64.deb +
+fritzing		+
+https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb +
+spotify-client	+
+ubuntu-restricted-extras 	+
+dropbox			+
+w3m				+
+gparted			+
+
+NEW
+-------
+vlc - both
+htop - both
+
+
+Notes
+------------
+alias python, the new link breaks `apt-get updgrade`s
+Make src and bin, fix $PATH to match
+change Menu settings in /usr/share/applications/*.desktop, specifically R is not in Programming and Root Terminal isn't displaying and change fritzing icon to /usr/share/pixmaps/fritzing_icon.png
