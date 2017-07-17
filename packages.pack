@@ -1,6 +1,6 @@
 tmux
+texlive-full
 vim
 gcc
 git
 htop
-zsh
