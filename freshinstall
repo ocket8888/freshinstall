@@ -120,3 +120,11 @@ if [ $VERBOSE ]; then
 fi
 
 $INSTALL $PKGS;
+
+if [ $VERBOSE ]; then
+	echo "Configuring git...";
+fi
+
+git config --global user.name ocket8888
+git config --global user.email ocket8888@gmail.com
+git config --global push.default matching
