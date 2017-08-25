@@ -133,3 +133,6 @@ if [ -f ~/.bashrc ]; then
 	rm ~/.bashrc
 fi
 cp ./.bashrc ~/
+
+mkdir -p ~/.local/go-dependencies
+

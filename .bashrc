@@ -133,8 +133,14 @@ if [ -d ~/.local/bin ]; then
     export PATH=$PATH:~/.local/bin/
 fi
 
+export PATH=$PATH:/usr/lib/go/bin
+
 
 #Useful aliases
 alias cls="clear && ls"
 alias python="python3"
 alias pip="pip3"
+
+export GOROOT=/usr/lib/go
+export GOPATH=~/.local/go-dependencies
+
